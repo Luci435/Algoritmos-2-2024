@@ -152,61 +152,6 @@ def deleteT(AVL, element):
         current.parent=parent
         reBalanceRecu(AVL, parent)
         return key
-
-#deleteKey(B,key)
-#Se debe desvincular el Node a eliminar.
-#Devuelve clave (key) a eliminar.
-#Devuelve None si el elemento a eliminar no se encuentra.
-def deleteKey(AVL,key):
-  node=accessReturnNode(AVL.root, key)
-  parent=node.parent
-  if node.rightnode==None:
-    if node.leftnode==None:
-      if key>parent.key:
-        parent.rightnode=None
-        return key
-      else:
-        parent.leftnode=None
-        return key
-    
-#access(B,key)
-#Devuelve el valor de un elemento con una key del árbol binario 
-#Devuelve None si no existe elemento con dicha clave.
- 
-def accessT(AVL, key):
-  currentNode = AVL.root
-  return accessByKey(currentNode, key)
-
-#funcion recursiva para acceder al valor buscando la key
-def accessByKey(currentNode, key):
-  if currentNode.key==key:
-    return currentNode.value
-  else:
-    if currentNode.key<key:
-      if currentNode.rightnode !=None:
-        value=accessByKey(currentNode.rightnode, key)
-        return value
-    else:
-      if currentNode.key>key:
-        if currentNode.leftnode != None:
-          value=accessByKey(currentNode.leftnode, key)
-          return value
-      else:
-        return None
-
-#update(L,element,key)
-#Devuelve None si no existe elemento para dicha clave. 
-#Caso contrario devuelve la clave del nodo donde se hizo el update.
-
-def updateT(AVL, element, key):
-  #busca el nodo en función aparte y al recibirlo le cambia el value 
-  currentNode=accessReturnNode(AVL.root, key)
-  if currentNode.value==None:
-    return None
-  else:
-    currentNode.value=element
-    return element
-
 #busca recursivamente el nodo correspondiente a la key 
 #una vez encuentra el nodo lo devuelve 
 def accessReturnNode(currentNode, key):
@@ -318,22 +263,6 @@ def reHeightBF(node):
       node.height=1
   return node
 
-#calculateBalance(AVLTree) 
-#Descripción: Calcula el factor de balanceo de un árbol binario de búsqueda. 
-#Entrada: El árbol AVL  sobre el cual se quiere operar.
-#Salida: El árbol AVL con el valor de balanceFactor para cada subarbol
-#recorrer recursivamente el arbol hacia la izq y poner bf=0 altura =0, subir al padre y actualizar height+1 
-#bf del padre sigue en none, si height derecha == none entonces calcular hacia la derecha 
-#una vez que izq y der != none calcular bf 
-
-def calculateBalance(AVLTree):
-  #avanzo hasta lo mas a la izq posible
-  current=AVLTree.root
-  while current.leftnode!=None:
-    current=current.leftnode
-  #empieza recursividad
-  return calculateBalanceRecur(current)
-  
 #calcula bf y altura desde el nodo recibido hasta la raiz, no todo el arbol
 def calculateBalanceRecur(node):
   if node.leftnode!=None:
@@ -385,22 +314,6 @@ def calculateBalanceRecur(node):
   return calculateBalanceRecur(node.parent) #calculo altura y bf del padre 
 
 
-#reBalance(AVLTree) 
-#Descripción: balancea un árbol binario de búsqueda. Para esto se deberá primero calcular el balanceFactor del árbol y luego en función de esto aplicar la estrategia de rotación que corresponda.
-#Entrada: El árbol binario de tipo AVL  sobre el cual se quiere operar.
-#Salida: Un árbol binario de búsqueda balanceado. Es decir luego de esta operación se cumple que la altura (h) de su subárbol derecho e izquierdo difieren a lo sumo en una unidad.
-def reBalance(AVLTree):
-  if AVLTree.root==None:
-    return None
-  if AVLTree.root.bf==None:
-    calculateBalance(AVLTree)
-  current=AVLTree.root
-  while current.leftnode!=None:
-    current=current.leftnode
-  reBalanceRecu(AVLTree,current)
-  reBalanceRecu(AVLTree,current.rightnode)
-  return
-
 #recibe el avl y el nodo a balancear, balancea desde el nodo hasta la raiz
 def reBalanceRecu(avl,node):
   if node==None:
@@ -424,69 +337,3 @@ def reBalanceRecu(avl,node):
     return node #si es la raiz devuelvo el nodo
   else:
     return reBalanceRecu(avl,node.parent) #recalculo el bf y altura del padre
-
-#recursividad para preorder 
-def preOrderBF(currentNode,valuesList):
-  if currentNode!=None:
-    add(valuesList,currentNode.value)
-    print("nodo")
-    print(currentNode.value)
-    print("bf")
-    print(currentNode.bf)
-    preOrderBF(currentNode.leftnode,valuesList)
-    preOrderBF(currentNode.rightnode,valuesList)
-
-#recorre el arbol de forma preorder y lo guarda en una lista 
-def traverseInPreOrderBF(B):
-  if B.root==None:
-    return None
-  else:
-    valuesList=LinkedList()
-    preOrderBF(B.root,valuesList)
-    return invertList(valuesList)
-
-#recursividad para preorder 
-def preOrder(currentNode,valuesList):
-  if currentNode!=None:
-    add(valuesList,currentNode.value)
-    preOrder(currentNode.leftnode,valuesList)
-    preOrder(currentNode.rightnode,valuesList)
-
-#recorre el arbol de forma preorder y lo guarda en una lista 
-def traverseInPreOrder(B):
-  if B.root==None:
-    return None
-  else:
-    valuesList=LinkedList()
-    preOrder(B.root,valuesList)
-    return invertList(valuesList)
-
-#recursividad para postorder 
-def postOrder(currentNode,valuesList):
-  if currentNode!=None:
-    postOrder(currentNode.leftnode,valuesList)
-    postOrder(currentNode.rightnode,valuesList)
-    add(valuesList,currentNode.value)
-
-#recorre el arbol de forma postorder y lo guarda en una lista 
-def traverseInPostOrder(B):
-  if B.root==None:
-    return None
-  else:
-    valuesList=LinkedList()
-    postOrder(B.root,valuesList)
-    return invertList(valuesList)
-
-#recorre el arbol de forma breadfirst y lo guarda en una lista 
-def traverseBreadFirst(B):
-  queue=LinkedList()
-  queueList=LinkedList()
-  add(queue,B.root)
-  while queue.head!=None:
-    currentNode=dequeue(queue)
-    add(queueList,currentNode.value)
-    if currentNode.leftnode!=None:
-      add(queue,currentNode.leftnode)
-    if currentNode.rightnode!=None:
-      add(queue,currentNode.rightnode)
-  return invertList(queueList)
